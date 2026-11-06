@@ -1,0 +1,4 @@
+This directory has no gophermap, so gopherd generated this listing
+for you automatically. Directories work like menus; files work like
+documents. That is the whole trick Gopher ever had — and in 1991,
+it was enough to organise the internet.

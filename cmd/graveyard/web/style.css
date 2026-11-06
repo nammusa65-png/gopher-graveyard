@@ -1,0 +1,40 @@
+:root {
+  --bg: #0d0f14; --panel: #161a23; --ink: #d8e0d0; --dim: #8a967f;
+  --accent: #9edb6a; --tomb: #5b6470; --err: #e06c5b;
+}
+* { box-sizing: border-box; }
+body { margin: 0 auto; max-width: 860px; padding: 24px 16px 48px;
+  background: var(--bg); color: var(--ink);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+header h1 { font-size: 2rem; margin: 0 0 8px; }
+.tagline { color: var(--dim); line-height: 1.6; }
+code { color: var(--accent); }
+#bar { display: flex; gap: 8px; align-items: center; margin: 20px 0; flex-wrap: wrap; }
+#addr { flex: 1; min-width: 260px; background: var(--panel); color: var(--ink);
+  border: 1px solid #2a3040; border-radius: 6px; padding: 10px 12px; font: inherit; }
+button { background: #232a38; color: var(--ink); border: 1px solid #39415a;
+  border-radius: 6px; padding: 10px 14px; font: inherit; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+.raw-toggle { color: var(--dim); font-size: .85rem; }
+#map { background: var(--panel); border: 1px solid #232839; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; }
+#map h2 { font-size: 1rem; margin: 4px 0 10px; color: var(--dim); }
+#hosts { display: flex; gap: 8px; flex-wrap: wrap; }
+.host { font-size: .85rem; }
+.host .dot { margin-right: 6px; }
+.host.alive .dot { color: var(--accent); }
+.host.dead { color: var(--tomb); text-decoration: line-through; }
+.host.dead .dot { color: var(--err); }
+#view { background: var(--panel); border: 1px solid #232839; border-radius: 8px; padding: 18px 20px; min-height: 240px; }
+.item { display: block; padding: 7px 8px; border-radius: 4px; color: var(--ink); text-decoration: none; }
+a.item:hover { background: #1f2534; }
+.item .ic { display: inline-block; width: 1.6em; }
+.item.info { color: var(--dim); }
+.item.err { color: var(--err); }
+pre.text, #raw { white-space: pre-wrap; word-break: break-word; line-height: 1.55; }
+#raw { background: #090b0f; border: 1px dashed #39415a; border-radius: 8px; padding: 14px 16px; color: #a8c69a; font-size: .82rem; }
+.tombstone { text-align: center; padding: 32px 10px; color: var(--tomb); }
+.tombstone .stone { font-size: 3rem; }
+.tombstone .err { color: var(--err); font-size: .85rem; }
+.hint { color: var(--dim); }
+footer { margin-top: 28px; color: var(--dim); font-size: .85rem; line-height: 1.6; }
+footer a { color: var(--accent); }

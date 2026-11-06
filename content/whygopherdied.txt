@@ -1,0 +1,15 @@
+Why Gopher died
+===============
+
+1991  Gopher is born at the University of Minnesota. Menus of text,
+      organised like a filesystem, searchable with Veronica.
+1993  The Web arrives with pictures and free-form hypertext.
+      Minnesota announces licensing fees for Gopher servers;
+      the Web's CERN puts its technology in the public domain.
+1995+ Browsers fold Gopher in as a curiosity (gopher:// links),
+      then quietly remove support. Firefox drops it in 2011,
+      Chrome never restores it.
+
+What survived: a few hundred servers, kept alive by enthusiasts.
+A January 2026 census counted 411 active servers and about
+5.86 million selectors. Small — but not zero. Not dead. Undead.

@@ -1,0 +1,14 @@
+About Gopher Graveyard
+======================
+
+You are reading this over the Gopher protocol — or through a web
+gateway that speaks it for you, because your browser no longer can.
+
+This gopherhole is served by gopherd, a Gopher server written from
+scratch in Go for Kiroween 2026 (category: Resurrection).
+
+The protocol, in full (RFC 1436):
+  1. Connect to TCP port 70.
+  2. Send one line: the selector. Empty means "the root menu".
+  3. The server sends text or a menu, then a lone "." and hangs up.
+No headers. No cookies. No JavaScript. No state.

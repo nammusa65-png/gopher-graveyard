@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gopher Graveyard — a séance for a dead protocol</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🪦 Gopher Graveyard</h1>
+  <p class="tagline">The Web killed Gopher in the 1990s, and browsers dropped <code>gopher://</code> entirely.
+  This is a séance: a modern browser, talking to the dead protocol again — live.</p>
+</header>
+
+<nav id="bar">
+  <button id="back" title="Back">←</button>
+  <input id="addr" type="text" value="gopher://gopher.floodgap.com" spellcheck="false">
+  <button id="go">Dig ⛏️</button>
+  <label class="raw-toggle"><input type="checkbox" id="rawmode"> Séance mode (raw protocol)</label>
+</nav>
+
+<section id="map">
+  <h2>Graveyard map — known holes</h2>
+  <div id="hosts"></div>
+</section>
+
+<main id="view"><p class="hint">Enter a <code>gopher://</code> URL above, or pick a grave to visit.</p></main>
+<pre id="raw" hidden></pre>
+
+<footer>
+  <p>Gopher: RFC 1436 (1991), University of Minnesota. Port 70, one selector line, no state.
+  Built for <a href="https://kiroween.devpost.com/">Kiroween 2026</a> — Resurrection.</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

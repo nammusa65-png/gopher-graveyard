@@ -1,0 +1,11 @@
+iGopher Graveyard — our own gopherhole, served by gopherd	TITLE	fake	0
+iThis server is written from scratch in Go (RFC 1436).	fake	fake	0
+i	fake	fake	0
+0About this project	/about.txt	localhost	70
+0Why Gopher died	/whygopherdied.txt	localhost	70
+1Documents (generated listing)	/docs	localhost	70
+i	fake	fake	0
+iExternal graves worth visiting:	fake	fake	0
+1Floodgap — community hub since 1999	/	gopher.floodgap.com	70
+1SDF — public access UNIX	/	sdf.org	70
+7Veronica-2 — search Gopherspace	/v2/vs	gopher.floodgap.com	70
