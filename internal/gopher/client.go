@@ -4,7 +4,9 @@ package gopher
 
 import (
 	"bufio"
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -96,7 +98,13 @@ const MaxResponse = 8 << 20 // 8 MiB
 
 // Fetch retrieves the raw response for a Gopher URL: it opens a TCP
 // connection, sends the selector (plus search terms for type 7), and
-// reads until the server closes the connection, per RFC 1436.
+// reads the response, per RFC 1436.
+//
+// For menus and text, the response ends with a line containing only
+// "." — Fetch stops there instead of waiting for the server to close
+// the connection. Some servers (and some proxies in between) are slow
+// to close, and waiting for EOF would hang an otherwise complete
+// response. Binary items have no terminator and are read to EOF.
 func Fetch(ctx context.Context, u URL) ([]byte, error) {
 	d := net.Dialer{Timeout: DefaultTimeout}
 	addr := net.JoinHostPort(u.Host, strconv.Itoa(u.Port))
@@ -117,7 +125,36 @@ func Fetch(ctx context.Context, u URL) ([]byte, error) {
 	if _, err := io.WriteString(conn, req+"\r\n"); err != nil {
 		return nil, err
 	}
-	return io.ReadAll(io.LimitReader(conn, MaxResponse))
+	if u.Type == '9' || u.Type == '5' || u.Type == '6' {
+		// Binary payloads carry no terminator; read to EOF.
+		return io.ReadAll(io.LimitReader(conn, MaxResponse))
+	}
+	var buf bytes.Buffer
+	r := bufio.NewReader(io.LimitReader(conn, MaxResponse))
+	for {
+		line, err := r.ReadBytes('\n')
+		buf.Write(line)
+		if strings.TrimRight(string(line), "\r\n") == "." {
+			break // protocol terminator: response complete
+		}
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			if buf.Len() > 0 && isTimeout(err) {
+				// A complete-looking response whose connection is
+				// being held open: deliver what arrived.
+				break
+			}
+			return buf.Bytes(), err
+		}
+	}
+	return buf.Bytes(), nil
+}
+
+func isTimeout(err error) bool {
+	var ne net.Error
+	return errors.As(err, &ne) && ne.Timeout()
 }
 
 // ParseMenu parses a Gopher menu response into items. It stops at the

@@ -6,6 +6,7 @@ import (
 	"net"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestParseURL(t *testing.T) {
@@ -97,6 +98,46 @@ func TestFetchAgainstLocalServer(t *testing.T) {
 	}
 	items := ParseMenu(raw)
 	if len(items) != 1 || items[0].Display != "hello" {
+		t.Fatalf("unexpected items: %+v", items)
+	}
+}
+
+// TestFetchStopsAtTerminator covers servers (and proxies) that send a
+// complete response but are slow to close the connection: Fetch must
+// return at the "." terminator instead of waiting for EOF.
+func TestFetchStopsAtTerminator(t *testing.T) {
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ln.Close()
+	release := make(chan struct{})
+	defer close(release)
+	go func() {
+		conn, err := ln.Accept()
+		if err != nil {
+			return
+		}
+		defer conn.Close()
+		buf := make([]byte, 64)
+		_, _ = conn.Read(buf)
+		fmt.Fprint(conn, "islow server\tTITLE\tfake\t0\r\n.\r\n")
+		<-release // hold the connection open on purpose
+	}()
+	port := ln.Addr().(*net.TCPAddr).Port
+	u := URL{Host: "127.0.0.1", Port: port, Type: '1'}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	start := time.Now()
+	raw, err := Fetch(ctx, u)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if elapsed := time.Since(start); elapsed > 5*time.Second {
+		t.Fatalf("Fetch took %v; it should stop at the terminator", elapsed)
+	}
+	items := ParseMenu(raw)
+	if len(items) != 1 || items[0].Display != "slow server" {
 		t.Fatalf("unexpected items: %+v", items)
 	}
 }
