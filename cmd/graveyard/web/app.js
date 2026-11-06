@@ -1,6 +1,7 @@
 "use strict";
 
 const HOSTS = [
+  { name: "Our own hole — served by gopherd (needs it running alongside)", url: "gopher://localhost" },
   { name: "Floodgap — community hub since 1999", url: "gopher://gopher.floodgap.com" },
   { name: "SDF — public access UNIX", url: "gopher://sdf.org" },
   { name: "Veronica-2 — search all of Gopherspace", url: "gopher://gopher.floodgap.com/7/v2/vs" },

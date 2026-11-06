@@ -55,7 +55,7 @@ func handleFetch(w http.ResponseWriter, r *http.Request) {
 	if q := r.URL.Query().Get("search"); q != "" {
 		u.Search = q
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 	data, err := gopher.Fetch(ctx, u)
 	if err != nil {
@@ -90,12 +90,21 @@ func handleCheck(w http.ResponseWriter, r *http.Request) {
 	u.Selector = ""
 	u.Type = '1'
 	u.Search = ""
-	ctx, cancel := context.WithTimeout(r.Context(), 6*time.Second)
-	defer cancel()
-	_, err = gopher.Fetch(ctx, u)
+	// One retry: intermediaries occasionally stall a first attempt,
+	// and a single transient failure should not bury a live host.
+	alive := false
+	for attempt := 0; attempt < 2 && !alive; attempt++ {
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+		_, ferr := gopher.Fetch(ctx, u)
+		cancel()
+		alive = ferr == nil
+		if !alive && attempt == 0 {
+			time.Sleep(time.Second)
+		}
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]any{
 		"url":   u.String(),
-		"alive": err == nil,
+		"alive": alive,
 	})
 }
